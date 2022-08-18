@@ -12,10 +12,9 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @title
  * @description
  * @date 2022-06-20 14:45
- *
  */
 @MapperScan("com.personal.mapper")
-@ComponentScan(basePackages = {"com.personal","org.n3r.idworker"})
+@ComponentScan(basePackages = {"com.personal", "org.n3r.idworker"})
 @EnableScheduling
 @SpringBootApplication
 public class Application {

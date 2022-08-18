@@ -170,6 +170,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- spring-session依赖 -->
+        <!--<dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>-->
+
+        <!-- spring-security -->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>-->
+
     </dependencies>
 
     <build>

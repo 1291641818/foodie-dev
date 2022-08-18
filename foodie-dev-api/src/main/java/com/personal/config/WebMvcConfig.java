@@ -1,9 +1,11 @@
 package com.personal.config;
 
+import com.personal.interceptor.UserTokenInterceptor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,16 +21,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 将RestTemplate交给spring管理
+     *
      * @param builder
      * @return
      */
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder){
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 
     /**
      * 实现静态资源的映射
+     *
      * @param registry
      */
     @Override
@@ -41,5 +45,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 //本地资源映射 unix
 
                 .addResourceLocations("file:/usr/local/temp/images/");
+    }
+
+    @Bean
+    public UserTokenInterceptor userTokenInterceptor() {
+        return new UserTokenInterceptor();
+    }
+
+
+    /**
+     * 注册用户请求拦截器
+     *
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userTokenInterceptor()).addPathPatterns("/*/carousel");
     }
 }
