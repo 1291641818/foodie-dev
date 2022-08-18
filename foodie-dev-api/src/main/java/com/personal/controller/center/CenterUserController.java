@@ -3,6 +3,7 @@ package com.personal.controller.center;
 import com.personal.controller.BaseController;
 import com.personal.pojo.Users;
 import com.personal.pojo.bo.center.CenterUserBO;
+import com.personal.pojo.vo.UsersVO;
 import com.personal.resource.FileUpload;
 import com.personal.service.center.CenterUserService;
 import com.personal.utils.CookieUtils;
@@ -127,11 +128,11 @@ public class CenterUserController extends BaseController {
         //更新用户头像到数据库
         Users users = centerUserService.updateUserFace(userId, finalUserFaceUrl);
 
+        UsersVO usersVO = convert2UsersVO(users);
+
         //刷新cookie
-        setNullProperty(users);
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(users), true);
-        //TODO 后续要增加token,会整合进redis，分布式会话
+                JsonUtils.objectToJson(usersVO), true);
         return JSONResult.ok();
     }
 
@@ -152,12 +153,10 @@ public class CenterUserController extends BaseController {
         //2. 更新数据，返回更新的对象
         Users userResult = centerUserService.updateUserInfo(userId, centerUserBO);
 
+        UsersVO usersVO = convert2UsersVO(userResult);
         //3. 将多余数据置空，并存入cookie
-        setNullProperty(userResult);
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
-
-        // TODO 后续要改，增加令牌token，会整合进redis，分布式会话
+                JsonUtils.objectToJson(usersVO), true);
 
         return JSONResult.ok();
     }

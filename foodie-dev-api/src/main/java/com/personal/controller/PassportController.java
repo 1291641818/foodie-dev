@@ -1,16 +1,16 @@
 package com.personal.controller;
 
-import com.personal.pojo.bo.ShopcartBO;
-import com.personal.service.UserService;
 import com.personal.pojo.Users;
+import com.personal.pojo.bo.ShopcartBO;
 import com.personal.pojo.bo.UserBO;
+import com.personal.pojo.vo.UsersVO;
+import com.personal.service.UserService;
 import com.personal.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,10 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import static com.personal.controller.BaseController.FOODIE_SHOPCART;
-import static com.personal.controller.BaseController.REDIS_USER_TOKEN;
 
 /**
  * @author aXuan
@@ -34,7 +30,7 @@ import static com.personal.controller.BaseController.REDIS_USER_TOKEN;
 @Api(value = "注册登录", tags = {"用于注册登录的相关接口"})
 @RestController
 @RequestMapping("/passport")
-public class PassportController {
+public class PassportController extends BaseController {
 
     static final Logger logger = LoggerFactory.getLogger(PassportController.class);
 
@@ -89,14 +85,12 @@ public class PassportController {
         //4.注册
 
         Users users = userService.createUser(userBO);
-        setNullProperty(users);
 
         // 实现用户的redis会话
-        String uniqueToken = UUID.randomUUID().toString().trim();
-        redisOperator.set(REDIS_USER_TOKEN + ":" + users.getId(), uniqueToken);
+        UsersVO usersVO = convert2UsersVO(users);
 
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(users), true);
+                JsonUtils.objectToJson(usersVO), true);
 
         // 同步购物车数据
         synShopCartData(users.getId(), request, response);
@@ -121,21 +115,14 @@ public class PassportController {
 
         //登录
         Users users = userService.queryUserForLogin(username, MD5Utils.getMD5Str(password));
-        setNullProperty(users);
+
+        // 实现用户的redis会话
+        UsersVO usersVO = convert2UsersVO(users);
 
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(users), true);
+                JsonUtils.objectToJson(usersVO), true);
 
         return JSONResult.ok(users);
-    }
-
-    private void setNullProperty(Users users) {
-        users.setPassword(null);
-        users.setMobile(null);
-        users.setEmail(null);
-        users.setCreatedTime(null);
-        users.setUpdatedTime(null);
-        users.setBirthday(null);
     }
 
     @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
@@ -143,10 +130,12 @@ public class PassportController {
     public JSONResult logout(@RequestParam String userId,
                              HttpServletRequest request,
                              HttpServletResponse response) {
+        // 用户退出登录，需要清空redis中的购物车和用户其他会话信息
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
+
         //清除用户相关信息的cookie
         CookieUtils.deleteCookie(request, response, "user");
-        //TODO 用户退出登录，需要清空购物车
-        //TODO 在分布式会话中，需要清空用户数据
+        CookieUtils.deleteCookie(request, response, FOODIE_SHOPCART);
         return JSONResult.ok();
     }
 

@@ -157,6 +157,19 @@
             <version>2.0</version>
         </dependency>
 
+        <!-- pojo,vo,bo转换工具类，替代BeanUtils.copy -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>1.2.0.CR1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.2.0.CR1</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

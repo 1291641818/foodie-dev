@@ -8,38 +8,28 @@ spring:
     username: root
     password: root
 
-    # 集群模式(集群模式没有属于哪一个database的概念)
-    #    host: 192.168.247.135
-    #    port: 6379
-    #    password: Orc123456
-    #    database: 0
-    #    timeout: 5000
-    #    cluster:
-    #      nodes:
-    #        - 192.168.247.138:6379
-    #        - 192.168.247.139:6379
-    #        - 192.168.247.136:6379
-    #        - 192.168.247.140:6379
-    #        - 192.168.247.137:6379
     # Redis单机实例
-#  redis:
-#    database: 0
-#    host: 192.168.247.135
-#    port: 6379
-#    password: Orc123456
+  redis:
+    database: 0
+    host: 192.168.247.135
+    port: 6379
+    password: Orc123456
 
     # Redis哨兵模式
-  #    database: 0
-  #    password: Orc123456
-  #    sentinel:
-  #      master: mymaster
-  #      nodes: 192.168.247.135:26379,192.168.247.136:26379,192.168.247.137:26379
+#  redis:
+#    database: 0
+#    password: Orc123456
+#    sentinel:
+#      master: mymaster
+#      nodes: 192.168.247.135:26379,192.168.247.136:26379,192.168.247.137:26379
 
-  redis:
-    password: Orc123456
-    cluster:
-      nodes: 192.168.247.135:6379,192.168.247.136:6379,192.168.247.137:6379,192.168.247.138:6379,192.168.247.139:6379,192.168.247.140:6379
-    timeout: 10000
+
+    # 集群模式(集群模式没有属于哪一个database的概念)
+#  redis:
+#    password: Orc123456
+#    cluster:
+#      nodes: 192.168.247.135:6379,192.168.247.136:6379,192.168.247.137:6379,192.168.247.138:6379,192.168.247.139:6379,192.168.247.140:6379
+#    timeout: 10000
 #    jedis:
 #      pool:
 #        max-active: 20

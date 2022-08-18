@@ -1,9 +1,16 @@
 package com.personal.controller;
 
+import com.personal.convertor.UsersConvertor;
 import com.personal.pojo.Orders;
+import com.personal.pojo.Users;
+import com.personal.pojo.vo.UsersVO;
 import com.personal.service.center.MyOrdersService;
 import com.personal.utils.JSONResult;
+import com.personal.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
+import java.util.UUID;
 
 /**
  * @author aXuan
@@ -13,6 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2022-06-26 00:42
  */
 public class BaseController {
+
+    @Resource
+    private RedisOperator redisOperator;
+
+    @Resource
+    private UsersConvertor usersConvertor;
 
     public static final int COMMON_PAGE_SIZE = 10;
 
@@ -53,5 +66,20 @@ public class BaseController {
             return JSONResult.errorMsg("订单不存在！");
         }
         return JSONResult.ok(order);
+    }
+
+    /**
+     * 将Users转换为UsersVO并加上token
+     *
+     * @param users
+     * @return
+     */
+    public UsersVO convert2UsersVO(Users users) {
+        String uniqueToken = UUID.randomUUID().toString().trim();
+        redisOperator.set(REDIS_USER_TOKEN + ":" + users.getId(), uniqueToken);
+
+        UsersVO usersVO = usersConvertor.po2Vo(users);
+        usersVO.setUserUniqueToken(uniqueToken);
+        return usersVO;
     }
 }
