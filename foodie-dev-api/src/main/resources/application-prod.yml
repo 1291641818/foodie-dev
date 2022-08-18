@@ -1,0 +1,9 @@
+server:
+  port: 80
+
+spring:
+  datasource: # 数据源的相关配置
+    driver-class-name: com.mysql.jdbc.Driver # mysql驱动
+    url: jdbc:mysql://192.168.247.131:3306/foodie-shop?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=PRC
+    username: root
+    password: root

@@ -1,0 +1,13 @@
+profiles多环境配置梳理:
+1.数据源配置
+    1.1 url根据自身情况修改为localhost或内网IP（集群或分布式系统一定要修改为内网IP）
+    1.2 账号密码 驱动
+2.mybatis 日志打印
+    dev需要打印
+    test可以打印
+    prod无需打印
+3.图片保存目录和图片服务请求路径配置
+file.imgUserFacePath=/usr/local/temp/images
+file.imgServerUrl=http://cnn.natapp1.cc:8088/
+4.支付中心的回调地址
+public static final String PAY_RETURN_URL = "http://cnn.natapp1.cc/foodie-dev-api/orders/notifyMerchantOrderPaid";
